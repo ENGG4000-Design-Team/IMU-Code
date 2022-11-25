@@ -1,0 +1,28 @@
+Orient IMU to base elevation
+
+Press the pushbutton to capture base elevation data point.
+Base Elevation Data Point 0.1250
+Change elevation 5 degrees up from base data point.
+Press button to capture data point
+Reading 5 degrees up from base point:-3.7500
+Change elevation 10 degrees up from base data point.
+Press button to capture data point
+Reading 10 degrees up from base point:-8.0625
+Change elevation 15 degrees up from base data point.
+Press button to capture data point
+Reading 15 degrees up from base point:-12.2500
+Change elevation 20 degrees up from base data point.
+Press button to capture data point
+Reading 20 degrees up from base point:-17.0625
+Change elevation 25 degrees up from base data point.
+Press button to capture data point
+Reading 25 degrees up from base point:-21.6250
+Change elevation 30 degrees up from base data point.
+Press button to capture data point
+Reading 30 degrees up from base point:-26.5000
+Change elevation 35 degrees up from base data point.
+Press button to capture data point
+Reading 35 degrees up from base point:-31.5000
+Change elevation 40 degrees up from base data point.
+Press button to capture data point
+Reading 40 degrees up from base point:-35.9375

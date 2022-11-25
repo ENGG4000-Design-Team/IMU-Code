@@ -55,7 +55,6 @@
 
 // Digital input pin for button
 const int buttonPin = 22;
-int buttonState = 0;
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
@@ -91,6 +90,16 @@ void calibrateDevice()
   Serial.print("-----------\n\n");
 }
 
+void WaitForButtonPress(int pin)
+{
+  int buttonState = 0;
+  while (1)
+  {
+    buttonState = digitalRead(pin);
+    if (buttonState == HIGH) break;
+  }
+}
+
 void TestHeading(uint16_t expectedHeading)
 {
   Serial.print("-----------\n\n");
@@ -98,8 +107,8 @@ void TestHeading(uint16_t expectedHeading)
   Serial.print(expectedHeading);
   Serial.print(" degrees.\nPress the pushbutton when ready to capture data points\n");
 
-  // loop until button state is low
-  while (buttonState == LOW){}
+  // loop until button state is high
+  WaitForButtonPress(buttonPin);
 
   // capture DATA_POINTS data points
   for (int i = 0; i < DATA_POINTS; i++)
@@ -121,10 +130,120 @@ void TestHeading(uint16_t expectedHeading)
   Serial.print("-----------\n\n");
 }
 
+void RunHeadingTest()
+{
+  Serial.print("-----------\n\n");
+  Serial.println("Orient IMU to base heading\n");
+  Serial.println("Press the pushbutton to capture base heading data point.");
+  
+  WaitForButtonPress(buttonPin);
+
+  // Get a new sensor event
+  sensors_event_t event;
+  bno.getEvent(&event);
+
+  Serial.print("Base Heading Data Point ");
+  Serial.print(event.orientation.x, 4);
+  Serial.println();
+
+  delay(BNO055_SAMPLERATE_DELAY_MS);
+
+  // Move to right 5 times
+  int nMovesRight = 5;
+  int deviation = 5;
+  for (int i = 1; i <= nMovesRight; i++)
+  {
+    deviation = 5 * i;
+    Serial.print("Change heading ");
+    Serial.print(deviation);
+    Serial.println(" degrees to the right from base data point.");
+    Serial.println("Press button to capture data point");
+    WaitForButtonPress(buttonPin);
+
+    // capture event at new location
+    bno.getEvent(&event);
+    Serial.print("Reading ");
+    Serial.print(deviation);
+    Serial.print(" degrees to the right of base point:");
+    Serial.print(event.orientation.x, 4);
+    Serial.println();
+    delay(BNO055_SAMPLERATE_DELAY_MS);
+  }
+
+  Serial.println();
+
+  // Move to left 5 times
+  int nMovesLeft = 5;
+  deviation = 5;
+  for (int i = 1; i <= nMovesLeft; i++)
+  {
+    deviation = 5 * i;
+    Serial.print("Change heading ");
+    Serial.print(deviation);
+    Serial.println(" degrees to the left from base data point.");
+    Serial.println("Press button to capture data point");
+    WaitForButtonPress(buttonPin);
+
+    // capture event at new location
+    bno.getEvent(&event);
+    Serial.print("Reading ");
+    Serial.print(deviation);
+    Serial.print(" degrees to the left of base point:");
+    Serial.print(event.orientation.x, 4);
+    Serial.println();
+    delay(BNO055_SAMPLERATE_DELAY_MS);   
+  }
+
+  Serial.println();
+}
+
+void RunElevationTest()
+{
+  Serial.print("-----------\n\n");
+  Serial.println("Orient IMU to base elevation\n");
+  Serial.println("Press the pushbutton to capture base elevation data point.");
+  
+  WaitForButtonPress(buttonPin);
+
+  // Get a new sensor event
+  sensors_event_t event;
+  bno.getEvent(&event);
+
+  Serial.print("Base Elevation Data Point ");
+  Serial.print(event.orientation.z, 4);
+  Serial.println();
+
+  delay(BNO055_SAMPLERATE_DELAY_MS);
+
+  // Move to right 5 times
+  int nMovesUp = 8;
+  int deviation = 5;
+  for (int i = 1; i <= nMovesUp; i++)
+  {
+    deviation = 5 * i;
+    Serial.print("Change elevation ");
+    Serial.print(deviation);
+    Serial.println(" degrees up from base data point.");
+    Serial.println("Press button to capture data point");
+    WaitForButtonPress(buttonPin);
+
+    // capture event at new location
+    bno.getEvent(&event);
+    Serial.print("Reading ");
+    Serial.print(deviation);
+    Serial.print(" degrees up from base point:");
+    Serial.print(event.orientation.z, 4);
+    Serial.println();
+    delay(BNO055_SAMPLERATE_DELAY_MS);
+  }
+
+  Serial.println();
+}
+
 void setup() 
 {
   Serial.begin(9600);
-  Serial.print("BNO055 Heading Reader\n\n"); 
+  Serial.print("BNO055 Heading Tester\n\n"); 
 
   // initialize the pushbutton pin as an input:
   pinMode(buttonPin, INPUT);
@@ -153,6 +272,10 @@ void setup()
   // THE LOOP METHOD BECAUSE WE DO NOT WANT TO RUN
   // THIS TEST INFINITELY.
 
+  Serial.print("Data Points Per Heading: ");
+  Serial.print(DATA_POINTS);
+  Serial.println();
+
   // We are increasing the expected heading value
   // by 15 on each test.
   uint16_t heading;
@@ -161,9 +284,14 @@ void setup()
     TestHeading(heading);
   }
 
-  Serial.print("\n\nTEST FINISHED\n\n");  
+  Serial.print("\n\nTEST FINISHED\n\n"); 
 }
 
 void loop() 
 { 
+  //RunHeadingTest();
+  //RunElevationTest();
+
+  //Serial.println("Press pushbutton to run tests again");
+  //WaitForButtonPress(buttonPin);
 }

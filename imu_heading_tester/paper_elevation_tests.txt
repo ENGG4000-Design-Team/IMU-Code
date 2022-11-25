@@ -1,0 +1,57 @@
+TEST 1
+---------------
+Base Elevation Data Point 0.6875
+
+Reading 5 degrees up from base point:-4.3125
+
+Reading 10 degrees up from base point:-8.8750
+
+Reading 15 degrees up from base point:-13.6875
+
+Reading 20 degrees up from base point:-18.8125
+
+Reading 25 degrees up from base point:-23.6875
+
+Reading 30 degrees up from base point:-28.5000
+
+Reading 35 degrees up from base point:-33.3750
+
+TEST 2 - MAGNET 4cm AWAY
+----------------
+Base Elevation Data Point 0.6875
+
+Reading 5 degrees up from base point:-2.2500
+
+Reading 10 degrees up from base point:-7.6250
+
+Reading 15 degrees up from base point:-12.5000
+
+Reading 20 degrees up from base point:-17.3125
+
+Reading 25 degrees up from base point:-22.2500
+
+Reading 30 degrees up from base point:-26.4375
+
+Reading 35 degrees up from base point:-32.1875
+
+Reading 40 degrees up from base point:-37.3125
+
+TEST 3 - MAGNET 6cm infront AND 3cm to right
+-----------------
+Base Elevation Data Point 0.1250
+
+Reading 5 degrees up from base point:-3.7500
+
+Reading 10 degrees up from base point:-8.0625
+
+Reading 15 degrees up from base point:-12.2500
+
+Reading 20 degrees up from base point:-17.0625
+
+Reading 25 degrees up from base point:-21.6250
+
+Reading 30 degrees up from base point:-26.5000
+
+Reading 35 degrees up from base point:-31.5000
+
+Reading 40 degrees up from base point:-35.9375

@@ -1,0 +1,35 @@
+Orient IMU to base heading
+
+Press the pushbutton to capture base heading data point.
+Base Heading Data Point 151.3125
+Change heading 5 degrees to the right from base data point.
+Press button to capture data point
+Reading 5 degrees to the right of base point:156.5625
+Change heading 10 degrees to the right from base data point.
+Press button to capture data point
+Reading 10 degrees to the right of base point:161.3125
+Change heading 15 degrees to the right from base data point.
+Press button to capture data point
+Reading 15 degrees to the right of base point:166.6875
+Change heading 20 degrees to the right from base data point.
+Press button to capture data point
+Reading 20 degrees to the right of base point:171.6875
+Change heading 25 degrees to the right from base data point.
+Press button to capture data point
+Reading 25 degrees to the right of base point:148.6250
+
+Change heading 5 degrees to the left from base data point.
+Press button to capture data point
+Reading 5 degrees to the left of base point:146.0000
+Change heading 10 degrees to the left from base data point.
+Press button to capture data point
+Reading 10 degrees to the left of base point:146.0000
+Change heading 15 degrees to the left from base data point.
+Press button to capture data point
+Reading 15 degrees to the left of base point:142.5625
+Change heading 20 degrees to the left from base data point.
+Press button to capture data point
+Reading 20 degrees to the left of base point:138.8750
+Change heading 25 degrees to the left from base data point.
+Press button to capture data point
+Reading 25 degrees to the left of base point:133.8750

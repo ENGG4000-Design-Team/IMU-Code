@@ -1,0 +1,39 @@
+Orient IMU to heading 105 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 110.2500
+
+-----------
+
+-----------
+
+Orient IMU to heading 120 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 125.6875
+-----------
+
+-----------
+
+Orient IMU to heading 135 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 141.5000
+-----------
+
+-----------
+
+Orient IMU to heading 150 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 155.6250
+-----------
+
+-----------
+
+Orient IMU to heading 165 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 168.6875
+-----------
+
+-----------
+
+Orient IMU to heading 180 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 1: 184.1875

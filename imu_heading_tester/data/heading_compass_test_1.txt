@@ -1,0 +1,64 @@
+BNO055 Heading Tester
+
+
+-----------
+Calibrating BNO055 Device:
+	To calibrate the Gyroscope, place the device down and let rest still...
+	Done calibrating Gyroscope
+	To calibrate the Accelerometer, rotate the device around an axis in 45 degree increments...
+	Done calibrating Accelerometer
+	To calibrate the Magnetometer, move the device through the air in a figure-8 pattern...
+	Done calibrating Magnetometer
+Calibration complete!
+-----------
+
+Operating Temperature: 0 C
+
+Data Points Per Heading: 100
+-----------
+
+Orient IMU to heading 0 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 359.6875
+-----------
+
+-----------
+
+Orient IMU to heading 15 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 17.0000
+-----------
+
+-----------
+
+Orient IMU to heading 30 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 32.2500
+-----------
+
+-----------
+
+Orient IMU to heading 45 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 46.2500
+-----------
+
+-----------
+
+Orient IMU to heading 60 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 61.3125
+-----------
+
+-----------
+
+Orient IMU to heading 75 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 76.9375
+-----------
+
+-----------
+
+Orient IMU to heading 90 degrees.
+Press the pushbutton when ready to capture data points
+Data Point 0: 91.4375

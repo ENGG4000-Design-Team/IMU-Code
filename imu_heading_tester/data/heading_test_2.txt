@@ -1,0 +1,55 @@
+BNO055 Heading Tester
+
+
+-----------
+Calibrating BNO055 Device:
+	To calibrate the Gyroscope, place the device down and let rest still...
+	Done calibrating Gyroscope
+	To calibrate the Accelerometer, rotate the device around an axis in 45 degree increments...
+	Donecalibra    Accelerometer
+	To calibrate the Magnetometer, move the device through the air in a figure-8 pattern...
+	Done calibrating Magnetometer
+Calibration complete!
+-----------
+
+Operating Temperature: 0 C
+
+-----------
+
+Orient IMU to base heading
+
+Press the pushbutton to capture base heading data point.
+Base Heading Data Point 139.6875
+Change heading 5 degrees to the right from base data point.
+Press button to capture data point
+Reading 5 degrees to the right of base point:143.9375
+Change heading 10 degrees to the right from base data point.
+Press button to capture data point
+Reading 10 degrees to the right of base point:143.9375
+Change heading 30 degrees to the right from base data point.
+Press button to capture data point
+Reading 30 degrees to the right of base point:147.6250
+Change heading 120 degrees to the right from base data point.
+Press button to capture data point
+Reading 120 degrees to the right of base point:150.0000
+Change heading 600 degrees to the right from base data point.
+Press button to capture data point
+Reading 600 degrees to the right of base point:153.3125	
+
+Change heading 5 degrees to the left from base data point.
+Press button to capture data point
+Reading 5 degrees to the left of base point:132.9375
+Change heading 10 degrees to the left from base data point.
+Press button to capture data point
+Reading 10 degrees to the left of base point:130.6875
+Change heading 30 degrees to the left from base data point.
+Press button to capture data point
+Reading 30 degrees to the left of base point:127.6250
+Change heading 120 degrees to the left from base data point.
+Press button to capture data point
+Reading 120 degrees to the left of base point:122.8750
+Change heading 600 degrees to the left from base data point.
+Press button to capture data point
+Reading 600 degrees to the left of base point:122.8125
+
+-----------

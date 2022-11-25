@@ -1,0 +1,63 @@
+BNO055 Heading Tester
+
+
+-----------
+Calibrating BNO055 Device:
+	To calibrate the Gyroscope, place the device down and let rest still...
+	Done calibrating Gyroscope
+	To calibrate the Accelerometer, rotate the device around an axis in 45 degree increments...
+	Done calibrating Accelerometer
+	To calibrate the Magnetometer, move the device through the air in a figure-8 pattern...
+	Done calibrating Magnetometer
+Calibration complete!
+-----------
+
+Operating Temperature: 0 C
+
+
+Orient IMU to base heading
+
+Press the pushbutton to capture base heading data point.
+Base Heading Data Point 178.4375
+Change heading 5 degrees to the right from base data point.
+Press button to capture data point
+Rea    5 dY     to the right of base point:182.3125
+Change heading 10 degrees to the right from base data point.
+Press button to capture data point
+Reading 10 degrees to the right of base point:185.9375
+Change heading 30 degrees to the right from base data point.
+Press button to capture data point
+Reading 30 degrees to the right of base point:191.2500
+Change heading 120 degrees to the right from base data point.
+Press button to capture data point
+Reading 120 degrees to the right of base point:190.9375
+Change heading 600 degrees to the right from base data point.
+Press button to capture data point
+Reading 600 degrees to the right of base point:190.9375
+
+Change heading 5 degrees to the left from base data point.
+Press button to capture data point
+Reading 5 degrees to the left of base point:189.6875
+Change heading 10 degrees to the left from base data point.
+Press button to capture data point
+Reading 10 degrees to the left of base point:195.5000
+Change heading 30 degrees to the left from base data point.
+Press button to capture data point
+Reading 30 degrees to the left of base point:187.1250
+Change heading 120 degrees to the left from base data point.
+Press button to capture data point
+Reading 120 degrees to the left of base point:177.1250
+Change heading 600 degrees to the left from base data point.
+Press button to capture data point
+Reading 600 degrees to the left of base point:202.1250
+
+-----------
+
+Orient IMU to base elevation
+Press the pushbutton to capture base elevation data point.
+Base Elevation Data Point -0.3125
+Change elevation 5 degrees up from base data point.
+Press button to capture data point
+Reading 5 degrees up from base point:171.3125
+Change elevation 10 degrees up from base data point.
+Press button to capture data point
