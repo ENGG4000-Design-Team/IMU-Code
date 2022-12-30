@@ -36,18 +36,44 @@ uint8_t systemCal, gyroCal, accelCal, magCal;
 float azimuth = 0.0f;
 float elevation = 0.0f;
 
+// Correction angles
+float corrAzimuth = 0.0f;
+float corrElevation = 0.0f;
+
 // Variable that keeps track of current time
 time_t currentTime;
 
 /*
- Determine the Sun's azimuth and elevation
- angles based on the current date, time,
- latitude and longitude
+ Determine the difference between the Sun's
+ azimuth and elevation angles and the data
+ being reported by the IMU.
 */
-void findSunAngles()
+void determineCorrectionAngles()
 {
-  // todo: TIME ZONE???????
+  // Determine the Sun's azimuth and elevation
+  // angles based on the current date, time,
+  // latitude and longitude
+  // todo: currently latitude and longitude are hardcoded
   calcSunPos(&elevation, &azimuth, -66.21098, 45.36305, currentTime);
+
+  // Grab heading and elevation values from IMU
+  // IFF the calibration registers are reading 3
+  while (systemCal != 3 ||
+         gyroCal != 3 ||
+         accelCal != 3 ||
+         magCal != 3)
+  {
+    bno.getCalibration(&systemCal, &gyroCal, &accelCal, &magCal);
+  }
+
+  // When we know the system is fully calibrated then continue
+  sensors_event_t event;
+  bno.getEvent(&event);
+
+  // TODO: I DO NOT KNOW IF THIS WORKS
+  // Calculate the required correction angles as the difference
+  corrAzimuth = azimuth - event.orientation.x;
+  corrElevation = elevation - event.orientation.y;
 }
 
 /*
@@ -100,7 +126,7 @@ void setup()
 
   // TODO:
   // Manually set date and time, in the future
-  // maybe use a real time clock? 
+  // maybe use a real time clock?
   // TIME MUST BE IN UTC
   setTime(19, 30, 0, 30, 12, 2022);
 
@@ -108,30 +134,31 @@ void setup()
   currentTime = now();
 
   // Initialise the sensor
-  /*if (!bno.begin())
+  if (!bno.begin())
   {
     // There was a problem detecting the BNO055 ... check your connections
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
     while (1)
       ;
-  }*/
+  }
 
   delay(1000);
 
-  //calibrateDevice();
+  calibrateDevice();
 
-  //bno.setExtCrystalUse(true);
+  bno.setExtCrystalUse(true);
 }
 
 void loop()
 {
-  findSunAngles();
+  determineCorrectionAngles();
 
-  Serial.print("Sun's elevation angle: ");
-  Serial.print(elevation, 3);
   Serial.println();
-  Serial.print("Sun's azimuth angle: ");
-  Serial.print(azimuth, 3);
+  Serial.print("Elevation correction angle (deg): ");
+  Serial.print(corrElevation, 3);
+  Serial.println();
+  Serial.print("Azimuth correction angle (deg): ");
+  Serial.print(corrAzimuth, 3);
   Serial.println();
 
   delay(10000);
