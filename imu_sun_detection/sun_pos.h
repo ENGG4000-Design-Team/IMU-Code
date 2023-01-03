@@ -1,7 +1,7 @@
 /*
  * sun_pos.h
  * Author: Ethan Garnier
- * Date Modified: December 30, 2022
+ * Date Modified: January 2, 2022
  */
 #ifndef H_SUN_POS
 #define H_SUN_POS
@@ -14,5 +14,6 @@
 #define TWOPI 6.28318531
 
 int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude, time_t currentTime);
+int testSunPosCalc();
 
 #endif

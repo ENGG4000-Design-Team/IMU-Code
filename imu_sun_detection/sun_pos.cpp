@@ -8,7 +8,7 @@
 /*
  julianDate calculates the integer portion of the current Julia Date.
  This is the number of days ellapsed since noon on January 1, 4713 B. C.
- This code is modified from "Arduino Uno and Solar Position Calculations" 
+ This code is modified from "Arduino Uno and Solar Position Calculations"
  authored by David Brooks.
 */
 long julianDate(int year, int month, int day)
@@ -124,7 +124,40 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     return 1;
 }
 
-// todo:
+/*
+ testSunPosCalc tests the calcSunPos function above by running it over the time
+ interval 10am to 4pm on June 21st 2022 in 30 minute increments. This function
+ will print the calculated azimuth and elevation angles for further processing.
+*/
 int testSunPosCalc()
 {
+    float azimuth = 0.0f;
+    float elevation = 0.0f;
+    float latitude = 45.94505;
+    float longitude = -66.64798;
+
+    // test from 10am to 4pm UTC
+    // in increments of 30 mins
+    // on summer solstics
+    setTime(10, 0, 0, 21, 6, 2022);
+    time_t t = now();
+
+    while (hour(t) <= 16)
+    {
+        calcSunPos(&elevation, &azimuth, longitude, latitude, t);
+
+        Serial.println();
+        Serial.print("Time: ");
+        Serial.print(t);
+        Serial.println();
+        Serial.print("Elevation angle (deg): ");
+        Serial.print(elevation);
+        Serial.println();
+        Serial.print("Azimuth angle (deg): ");
+        Serial.print(azimuth);
+        Serial.println();
+
+        // increment time by 1800 seconds
+        adjustTime((long)1800);
+    }
 }
