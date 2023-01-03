@@ -78,10 +78,23 @@ void determineCorrectionAngles()
   sensors_event_t event;
   bno.getEvent(&event);
 
+  // Printing this for debugging
+  Serial.println();
+  Serial.println("Measured Azimuth: ");
+  Serial.println(event.orientation.x);
+  Serial.println("Desired Azimuth: ");
+  Serial.println(azimuth);
+
+  Serial.println("Measured Elevation: ");
+  Serial.println(event.orientation.y);
+  Serial.println("Desired Elevation: ");
+  Serial.println(elevation);
+  Serial.println();
+
   // TODO: I DO NOT KNOW IF THIS WORKS
   // Calculate the required correction angles as the difference
   corrAzimuth = azimuth - event.orientation.x;
-  corrElevation = elevation - event.orientation.y;
+  corrElevation = elevation - event.orientation.z;
 }
 
 /*
@@ -156,7 +169,7 @@ void loop()
 {
   determineCorrectionAngles();
 
-  if (corrElevation < 0.01 && corrAzimuth < 0.01)
+  if (abs(corrElevation) < 0.01 && abs(corrAzimuth) < 0.01)
   {
     Serial.println("YOU ARE POINTING AT THE SUN!");
   }
@@ -169,5 +182,5 @@ void loop()
   Serial.print(corrAzimuth, 3);
   Serial.println();
 
-  delay(10000);
+  delay(1000);
 }
