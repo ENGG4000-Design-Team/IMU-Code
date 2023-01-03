@@ -14,7 +14,7 @@
  * not calibrated, then...
  *
  * Author: Ethan Garnier
- * Date Modified: December 30, 2022
+ * Date Modified: January 2, 2022
  */
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -22,6 +22,7 @@
 #include <utility/imumaths.h>
 #include <TimeLib.h>
 #include "sun_pos.h"
+#include "time_impl.h"
 
 // Set the delay between fresh samples
 #define BNO055_SAMPLERATE_DELAY_MS (100)
@@ -36,12 +37,16 @@ uint8_t systemCal, gyroCal, accelCal, magCal;
 float azimuth = 0.0f;
 float elevation = 0.0f;
 
+// Latitude and longitude of device
+float latitude = 45.94505;
+float longitude = -66.64798;
+
 // Correction angles
 float corrAzimuth = 0.0f;
 float corrElevation = 0.0f;
 
-// Variable that keeps track of current time
-time_t currentTime;
+// AST time zone
+int utc_offset = -4;
 
 /*
  Determine the difference between the Sun's
@@ -54,7 +59,10 @@ void determineCorrectionAngles()
   // angles based on the current date, time,
   // latitude and longitude
   // todo: currently latitude and longitude are hardcoded
-  calcSunPos(&elevation, &azimuth, -66.21098, 45.36305, currentTime);
+
+  // Get current date and time before calculating sun's position
+  time_t utc = now();
+  calcSunPos(&elevation, &azimuth, longitude, latitude, utc);
 
   // Grab heading and elevation values from IMU
   // IFF the calibration registers are reading 3
@@ -124,14 +132,9 @@ void setup()
   Serial.begin(9600);
   Serial.print("BNO055 Sun Detection\n\n");
 
-  // TODO:
-  // Manually set date and time, in the future
-  // maybe use a real time clock?
-  // TIME MUST BE IN UTC
-  setTime(19, 30, 0, 30, 12, 2022);
-
-  // Get current date and time
-  currentTime = now();
+  // Set time to when the project was compiled
+  // converted to UTC
+  setTime(toUTC(compileTime()));
 
   // Initialise the sensor
   if (!bno.begin())
@@ -152,6 +155,11 @@ void setup()
 void loop()
 {
   determineCorrectionAngles();
+
+  if (corrElevation < 0.01 && corrAzimuth < 0.01)
+  {
+    Serial.println("YOU ARE POINTING AT THE SUN!");
+  }
 
   Serial.println();
   Serial.print("Elevation correction angle (deg): ");

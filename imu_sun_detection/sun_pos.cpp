@@ -108,7 +108,7 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     // Azimuth measured eastward from north.
     *azimuth = (PI + atan2(sin(HrAngle), cos(HrAngle) * sin(latitudeRad) - tan(Decl) * cos(latitudeRad))) / DEG_TO_RAD;
 
-    Serial.print(cYear);
+    /*Serial.print(cYear);
     Serial.print(",");
     Serial.print(cMonth);
     Serial.print(",");
@@ -119,7 +119,7 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     Serial.print(cMinute);
     Serial.print(",");
     Serial.print(cSecond);
-    Serial.println();
+    Serial.println();*/
 
     return 1;
 }
