@@ -126,29 +126,33 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
 
 /*
  testSunPosCalc tests the calcSunPos function above by running it over the time
- interval 10am to 4pm on June 21st 2022 in 30 minute increments. This function
- will print the calculated azimuth and elevation angles for further processing.
+ interval 10:00am to 4:30pm on June 21st 2022 in 30 minute increments. Please note that
+ calcSunPos works off of UTC, however I am testing it against UTC-03:00, thus the values
+ in set time start at hour 13 not 10.
+
+ This function will print the calculated azimuth and elevation angles for further processing.
 */
 int testSunPosCalc()
 {
-    float azimuth = 0.0f;
-    float elevation = 0.0f;
+    float azimuth = 0.000f;
+    float elevation = 0.000f;
     float latitude = 45.94505;
     float longitude = -66.64798;
 
-    // test from 10am to 4pm UTC
-    // in increments of 30 mins
-    // on summer solstics
-    setTime(10, 0, 0, 21, 6, 2022);
+    setTime(13, 0, 0, 21, 6, 2022);
     time_t t = now();
 
-    while (hour(t) <= 16)
+    while (hour(t) <= 19)
     {
         calcSunPos(&elevation, &azimuth, longitude, latitude, t);
 
         Serial.println();
         Serial.print("Time: ");
-        Serial.print(t);
+        Serial.print((hour(t) - 3));
+        Serial.print(":");
+        Serial.print(minute(t));
+        Serial.print(":");
+        Serial.print(second(t));
         Serial.println();
         Serial.print("Elevation angle (deg): ");
         Serial.print(elevation);
@@ -159,5 +163,6 @@ int testSunPosCalc()
 
         // increment time by 1800 seconds
         adjustTime((long)1800);
+        t = now();
     }
 }
