@@ -49,6 +49,89 @@ float corrElevation = 0.0f;
 int utc_offset = -4;
 
 /*
+  Capture data as quaternions from IMU and convert to respective
+  Euler angles for use in determining where we are pointing. Math
+  adapted from http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/
+  and https://forums.adafruit.com/viewtopic.php?f=19&t=91723&p=462337#p462337.
+*/
+imu::Vector<3> quatToEuler()
+{
+  // Grab quaternion values from IMU
+  // IFF the calibration registers are reading 3
+  while (!bno.isFullyCalibrated())
+  {
+    bno.getCalibration(&systemCal, &gyroCal, &accelCal, &magCal);
+  }
+
+  imu::Quaternion q = bno.getQuat();
+  imu::Vector<3> euler;
+
+  /*// normalize
+  float qnorm = 1 / sqrt(q.w() * q.w() + q.x() * q.x() + q.y() * q.y() + q.z() * q.z());
+  q.w() *= qnorm;
+  q.x() *= qnorm;
+  q.y() *= qnorm;
+  q.z() *= qnorm;
+
+  // check for singularity cases at poles
+  float singularityTest = q.x() * q.y() + q.z() * q.w();
+  if (singularityTest > 0.499)
+  {
+    // singularity at north pole
+    euler.x() = 2 * atan2(q.x(), q.w());
+    euler.z() = PI / 2;
+    euler.y() = 0;
+    return;
+  }
+  else if (singularityTest < -0.499)
+  {
+    // singularity at south pole
+    euler.x() = -2 * atan2(q.x(), q.w());
+    euler.z() = -PI / 2;
+    euler.y() = 0;
+    return;
+  }
+  else
+  {
+    // if no singularity found, compute as follows:
+    // heading = atan2(2*qy*qw-2*qx*qz , 1 - 2*qy2 - 2*qz2)
+    // attitude = asin(2*qx*qy + 2*qz*qw)
+    // bank = atan2(2*qx*qw-2*qy*qz , 1 - 2*qx2 - 2*qz2)
+    euler.x() = 180 / PI * atan2(q.y() * q.w() - q.x() * q.z(), 0.5 - q.y() * q.y() - q.z() * q.z());
+    euler.y() = 180 / PI * atan2(q.x() * q.w() - q.y() * q.z(), 0.5 - q.x() * q.x() - q.z() * q.z());
+    euler.z() = 180 / PI * asin(2 * singularityTest);
+  }*/
+
+  q.normalize();
+
+  // TODO: Determine if we need to flip anything
+  // float temp = q.x();
+  // q.x() = -q.y();
+  // q.y() = temp;
+  // q.z() = -q.z();
+
+  euler = q.toEuler();
+
+  // For the heading, -179 should equal 359
+  // so if the value is negative let us take
+  // the abs value and add 180 to it
+  euler.x() = -180 / PI * euler.x();
+  euler.x() = (euler.x() < 0) ? abs(euler.x()) + 180 : euler.x();
+  euler.y() = -180 / PI * euler.y();
+  euler.z() = -180 / PI * euler.z();
+
+  Serial.print(F("Orientation: "));
+  Serial.print(euler.x()); // heading, nose-right is positive, z-axis points up
+  Serial.print(F(" "));
+  Serial.print(euler.y()); // roll, rightwing-up is positive, y-axis points forward
+  Serial.print(F(" "));
+  Serial.print(euler.z()); // pitch, nose-down is positive, x-axis points right
+  Serial.println(F(""));
+
+  return euler;
+}
+
+/*
  Determine the difference between the Sun's
  azimuth and elevation angles and the data
  being reported by the IMU.
@@ -66,10 +149,7 @@ void determineCorrectionAngles()
 
   // Grab heading and elevation values from IMU
   // IFF the calibration registers are reading 3
-  while (systemCal != 3 ||
-         gyroCal != 3 ||
-         accelCal != 3 ||
-         magCal != 3)
+  while (!bno.isFullyCalibrated())
   {
     bno.getCalibration(&systemCal, &gyroCal, &accelCal, &magCal);
   }
@@ -91,10 +171,15 @@ void determineCorrectionAngles()
   Serial.println(elevation);
   Serial.println();
 
+  // NOTE:
+  // We should be using event.orientation.y as the pitch, however
+  // for some reason the BNO055 "front" appears to be its left side??
+  // We may need to add 90 to event.orientation.x to correct for this?
+
   // TODO: I DO NOT KNOW IF THIS WORKS
   // Calculate the required correction angles as the difference
   corrAzimuth = azimuth - event.orientation.x;
-  corrElevation = elevation - event.orientation.z;
+  corrElevation = elevation - event.orientation.y;
 }
 
 /*
@@ -117,19 +202,19 @@ void calibrateDevice()
   }
   Serial.print("\tDone calibrating Gyroscope\n");
 
-  Serial.print("\tTo calibrate the Accelerometer, rotate the device around an axis in 45 degree increments...\n");
-  while (accelCal != 3)
-  {
-    bno.getCalibration(&systemCal, &gyroCal, &accelCal, &magCal);
-  }
-  Serial.print("\tDone calibrating Accelerometer\n");
-
   Serial.print("\tTo calibrate the Magnetometer, move the device through the air in a figure-8 pattern...\n");
   while (magCal != 3)
   {
     bno.getCalibration(&systemCal, &gyroCal, &accelCal, &magCal);
   }
   Serial.print("\tDone calibrating Magnetometer\n");
+
+  Serial.print("\tTo calibrate the Accelerometer, rotate the device around an axis in 45 degree increments...\n");
+  while (accelCal != 3)
+  {
+    bno.getCalibration(&systemCal, &gyroCal, &accelCal, &magCal);
+  }
+  Serial.print("\tDone calibrating Accelerometer\n");
 
   while (systemCal != 3)
   {
@@ -150,7 +235,7 @@ void setup()
   setTime(toUTC(compileTime()));
 
   // Initialise the sensor
-  if (!bno.begin())
+  if (!bno.begin(OPERATION_MODE_NDOF_FMC_OFF))
   {
     // There was a problem detecting the BNO055 ... check your connections
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
@@ -167,7 +252,7 @@ void setup()
 
 void loop()
 {
-  determineCorrectionAngles();
+  /*determineCorrectionAngles();
 
   if (abs(corrElevation) < 0.01 && abs(corrAzimuth) < 0.01)
   {
@@ -180,7 +265,9 @@ void loop()
   Serial.println();
   Serial.print("Azimuth correction angle (deg): ");
   Serial.print(corrAzimuth, 3);
-  Serial.println();
+  Serial.println();*/
+
+  quatToEuler();
 
   delay(1000);
 }
