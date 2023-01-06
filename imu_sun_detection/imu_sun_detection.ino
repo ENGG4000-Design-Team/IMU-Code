@@ -69,6 +69,7 @@ imu::Vector<3> getOrientation(bool useQuat = false)
   {
     // Only read data from IMU if fully calibrated
     bno.getCalibration(&systemCal, &gyroCal, &accelCal, &magCal);
+    Serial.print("Calibration Register Values: ");
     Serial.print(systemCal);
     Serial.print(" ");
     Serial.print(gyroCal);
@@ -81,6 +82,7 @@ imu::Vector<3> getOrientation(bool useQuat = false)
 
   if (useQuat)
   {
+    // BROKEN
     imu::Quaternion quat = bno.getQuat();
     quat.normalize();
 
@@ -103,21 +105,21 @@ imu::Vector<3> getOrientation(bool useQuat = false)
     bno.getEvent(&event);
 
     euler.x() = event.orientation.x;
-    euler.y() = event.orientation.y;
-    euler.z() = event.orientation.z;
+    euler.y() = -event.orientation.z;
+    euler.z() = event.orientation.y;
   }
 
   // DESIRED:
   // heading/yaw, nose-right is positive, z-axis points up
-  // pitch, nose-down is positive, x-axis points right
+  // pitch, nose-up is positive, x-axis points right
   // roll, rightwing-up is positive, y-axis points forward
 
   Serial.print("Orientation: ");
-  Serial.print(euler.x()); // 
+  Serial.print(euler.x());
   Serial.print(" ");
-  Serial.print(euler.y()); // 
+  Serial.print(euler.y());
   Serial.print(" ");
-  Serial.print(euler.z()); // 
+  Serial.print(euler.z());
   Serial.println("");
 
   return euler;
@@ -139,18 +141,8 @@ void determineCorrectionAngles()
   time_t utc = now();
   calcSunPos(&elevation, &azimuth, longitude, latitude, utc);
 
-  // Grab heading and elevation values from IMU
-  // IFF the calibration registers are reading 3
-  while (!bno.isFullyCalibrated())
-  {
-    bno.getCalibration(&systemCal, &gyroCal, &accelCal, &magCal);
-  }
-
+  // Grab IMU Euler angles
   imu::Vector<3> euler = getOrientation();
-
-  // When we know the system is fully calibrated then continue
-  sensors_event_t event;
-  bno.getEvent(&event);
 
   // Printing this for debugging
   Serial.println();
@@ -241,8 +233,8 @@ void setup()
 
   // TODO: Do we need this?
   // Remap axis based on chip placement
-  bno.setAxisRemap(0x21);
-  bno.setAxisSign(0x04);
+  // bno.setAxisRemap(0x21);
+  // bno.setAxisSign(0x04);
 
   calibrateDevice();
 
@@ -251,7 +243,7 @@ void setup()
 
 void loop()
 {
-  determineCorrectionAngles();
+  /*determineCorrectionAngles();
 
   if (abs(corrElevation) < 0.01 && abs(corrAzimuth) < 0.01)
   {
@@ -264,7 +256,9 @@ void loop()
   Serial.println();
   Serial.print("Azimuth correction angle (deg): ");
   Serial.print(corrAzimuth, 3);
-  Serial.println();
+  Serial.println();*/
+
+  getOrientation();
 
   delay(1000);
 }
