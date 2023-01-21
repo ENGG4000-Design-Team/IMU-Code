@@ -1,0 +1,2 @@
+# Raspberry Pi IMU Code
+This folder contains the Python code required for sun detection and IMU correction running on a Raspberry Pi device. This utilizes the [Adafruit_Python_BNO055 Library](https://github.com/adafruit/Adafruit_Python_BNO055)
