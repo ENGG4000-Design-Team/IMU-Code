@@ -68,7 +68,7 @@ def run_imu():
         time.sleep(1)
     return
 
-if __name__ == '__main':
+if __name__ == '__main__':
     if len(sys.argv) >= 2:
         # Enable verbose debug logging if -v is passed as a parameter.
         if len(sys.argv) == 3 and sys.argv[2].lower() == '-v':
