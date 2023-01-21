@@ -97,7 +97,7 @@ def run_imu():
                 heading, roll, pitch, sys, gyro, accel, mag)
 
             # Print data to stdout and log file
-            print()
+            print(data)
             logfile.write(data + "\n")
 
             # Other values you can optionally read:
