@@ -75,8 +75,8 @@ def run_imu():
     
     # Construct the logfile
     now = datetime.now()
-    dt = now.strftime("%d/%m/%Y-%H:%M:%S")
-    logfilename = f"BNO055_LOG_{dt}"
+    dt = now.strftime("%d-%m-%Y_%H-%M-%S")
+    logfilename = f"BNO055_LOG_{dt}.txt"
 
     logfile = open(logfilename, "w")
     log.write(f"BNO055 Log File - {dt}\n")
