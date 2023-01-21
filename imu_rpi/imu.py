@@ -8,6 +8,7 @@ import sys
 import time
 
 from Adafruit_BNO055 import BNO055
+from datetime import datetime
 
 # Raspberry Pi configuration with serial UART:
 bno = BNO055.BNO055(serial_port='/dev/serial0')
@@ -63,14 +64,22 @@ def calibrate_imu():
 
     # TODO: Write calibration offsets to calibration.json
 
-def run_imu():
+def run_imu(logfile):
     """Execute the main imu subroutine that will log
     the heading, roll, and pitch of the device to stdout and
-    a log file passed as a command line argument.
+    a log file passed as argument.
     """
     # Initialize the BNO055 and stop if something went wrong.
     if not bno.begin():
         raise RuntimeError('Failed to initialize BNO055! Is the sensor connected?')
+
+    log = open(logfile, "a")
+
+    now = datetime.now()
+    dt = now.strftime("%d/%m/%Y %H:%M:%S")
+    log.write("BNO055 Log File - {dt}\n")
+    
+    log.close()
 
     print_sys_info()
     calibrate_imu()
@@ -110,7 +119,7 @@ if __name__ == '__main__':
         if len(sys.argv) == 3 and sys.argv[2].lower() == '-v':
             logging.basicConfig(level=logging.DEBUG)
 
-        # Run the main IMU routine with logging true by default
-        run_imu()
+        # Run the main IMU routine with logging file name
+        run_imu(sys.argv[1].lower())
     else:
         print("Usage: sudo python imu.py <logging file name> [-v]")
