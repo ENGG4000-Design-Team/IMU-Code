@@ -1,8 +1,6 @@
 # imu.py
 # Author: Ethan Garnier
 # Last Modified: January 21, 2023
-# Code modified from simpletest.py in Adafruit_Python_BNO055
-# python library.
 import logging
 import sys
 import time
