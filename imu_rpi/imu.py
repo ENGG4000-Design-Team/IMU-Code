@@ -64,7 +64,7 @@ def calibrate_imu():
 
     # TODO: Write calibration offsets to calibration.json
 
-def run_imu(logfile):
+def run_imu():
     """Execute the main imu subroutine that will log
     the heading, roll, and pitch of the device to stdout and
     a log file passed as argument.
@@ -72,13 +72,14 @@ def run_imu(logfile):
     # Initialize the BNO055 and stop if something went wrong.
     if not bno.begin():
         raise RuntimeError('Failed to initialize BNO055! Is the sensor connected?')
-
-    log = open(logfile, "w")
-
+    
+    # Construct the logfile
     now = datetime.now()
-    dt = now.strftime("%d/%m/%Y %H:%M:%S")
-    log.write(f"BNO055 Log File - {dt}\n")
+    dt = now.strftime("%d/%m/%Y-%H:%M:%S")
+    logfilename = f"BNO055_LOG_{dt}"
 
+    logfile = open(logfilename, "w")
+    log.write(f"BNO055 Log File - {dt}\n")
     log.close()
 
     print_sys_info()
@@ -113,13 +114,18 @@ def run_imu(logfile):
         # Sleep for a second until the next reading.
         time.sleep(1)
 
-if __name__ == '__main__':
-    if len(sys.argv) >= 2:
-        # Enable verbose debug logging if -v is passed as a parameter.
-        if len(sys.argv) == 3 and sys.argv[2].lower() == '-v':
-            logging.basicConfig(level=logging.DEBUG)
+def parse_args():
+    if len(sys.argv) > 2:
+        for arg in sys.argv:
+            if arg.lower() == '-v':
+                logging.basicConfig(level=logging.DEBUG)
+            elif arg.lower() == '-h':
+                print("Usage: sudo python imu.py [-v -h]")
 
-        # Run the main IMU routine with logging file name
-        run_imu(sys.argv[1].lower())
-    else:
-        print("Usage: sudo python imu.py <logging file name> [-v]")
+
+if __name__ == '__main__':
+    # Parse command line arguments
+    parse_args()
+
+    # Run the main IMU routine
+    run_imu()
