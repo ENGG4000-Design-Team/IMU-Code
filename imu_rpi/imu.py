@@ -73,7 +73,7 @@ def run_imu(logfile):
     if not bno.begin():
         raise RuntimeError('Failed to initialize BNO055! Is the sensor connected?')
 
-    log = open(logfile, "a")
+    log = open(logfile, "w")
 
     now = datetime.now()
     dt = now.strftime("%d/%m/%Y %H:%M:%S")
