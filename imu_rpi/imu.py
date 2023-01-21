@@ -35,7 +35,7 @@ def print_sys_info(logfile):
     revisionStr = "Software version:   {0}\nBootloader version: {0}\nccelerometer ID:   0x{0:02X}\nMagnetometer ID:    0x{0:02X}\nGyroscope ID:       0x{0:02X}\n".format(
         sw, bl, accel, mag, gyro)
     print(revisionStr)
-    logfile(revisionStr + '\n')
+    logfile.write(revisionStr + '\n')
 
 def calibrate_imu():
     """Instruct the user on how to manually calibrate
