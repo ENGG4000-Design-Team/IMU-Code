@@ -12,15 +12,8 @@ from Adafruit_BNO055 import BNO055
 # Raspberry Pi configuration with serial UART:
 bno = BNO055.BNO055(serial_port='/dev/serial0')
 
-def run_imu():
-    """Execute the main imu subroutine that will log
-    the heading, roll, and pitch of the device to stdout and
-    a log file passed as a command line argument.
-    """
-    # Initialize the BNO055 and stop if something went wrong.
-    if not bno.begin():
-        raise RuntimeError('Failed to initialize BNO055! Is the sensor connected?')
-
+def print_sys_info():
+    """Print the BNO055 IMU system information"""
     # Print system status and self test result.
     status, self_test, error = bno.get_system_status()
     print('System status: {0}'.format(status))
@@ -37,6 +30,50 @@ def run_imu():
     print('Accelerometer ID:   0x{0:02X}'.format(accel))
     print('Magnetometer ID:    0x{0:02X}'.format(mag))
     print('Gyroscope ID:       0x{0:02X}\n'.format(gyro))
+
+def calibrate_imu():
+    """Instruct the user on how to manually calibrate
+    the BNO055 IMU magenetometer, gyroscope, and accelerometer.
+    Once each of these are calibrated, export the calibration
+    offsets to calibration.json. This file may be used in the future
+    to recalibrate the sensors in the event they become uncalibrated.
+    """
+    # Read the calibration status, 0=uncalibrated and 3=fully calibrated.
+    sys, gyro, accel, mag = bno.get_calibration_status()
+
+    print("\n-----------\n")
+    print("Calibrating BNO055 Device:\n")
+    
+    print("\tTo calibrate the Gyroscope, place the device down and let rest still...\n") 
+    while gyro != 3: sys, gyro, accel, mag = bno.get_calibration_status()
+    print("\tDone calibrating Gyroscope\n")
+
+    print("\tTo calibrate the Magnetometer, move the device through the air in a figure-8 pattern...\n")
+    while mag != 3: sys, gyro, accel, mag = bno.get_calibration_status()
+    print("\tDone calibrating Magnetometer\n")
+
+    print("\tTo calibrate the Accelerometer, rotate the device around an axis in 45 degree increments...\n")
+    while accel != 3: sys, gyro, accel, mag = bno.get_calibration_status()
+    print("\tDone calibrating Accelerometer\n")
+
+    while sys != 3: sys, gyro, accel, mag = bno.get_calibration_status()
+
+    print("Calibration complete!\n")
+    print("-----------\n\n")
+
+    # TODO: Write calibration offsets to calibration.json
+
+def run_imu():
+    """Execute the main imu subroutine that will log
+    the heading, roll, and pitch of the device to stdout and
+    a log file passed as a command line argument.
+    """
+    # Initialize the BNO055 and stop if something went wrong.
+    if not bno.begin():
+        raise RuntimeError('Failed to initialize BNO055! Is the sensor connected?')
+
+    print_sys_info()
+    calibrate_imu()
 
     print('Reading BNO055 data, press Ctrl-C to quit...')
     while True:
@@ -66,7 +103,6 @@ def run_imu():
         # x,y,z = bno.read_gravity()
         # Sleep for a second until the next reading.
         time.sleep(1)
-    return
 
 if __name__ == '__main__':
     if len(sys.argv) >= 2:
