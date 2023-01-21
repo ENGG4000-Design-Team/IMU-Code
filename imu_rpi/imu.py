@@ -22,17 +22,17 @@ def print_sys_info(logfile):
 
     selfTestStr = "Self test result (0x0F is normal): 0x{0:02X}".format(self_test)
     print(selfTestStr)
-    logfile.write(selfTestStr)
+    logfile.write(selfTestStr + '\n')
 
     # Print out an error if system status is in error mode.
     if status == 0x01:
         errorStr = "System error: {0}\nSee datasheet section 4.3.59 for the meaning.".format(error)
         print(errorStr)
-        logfile.write(errorStr)
+        logfile.write(errorStr + '\n')
 
     # Print BNO055 software revision and other diagnostic data.
     sw, bl, accel, mag, gyro = bno.get_revision()
-    revisionStr = "Software version:   {0}\nBootloader version: {0}\nccelerometer ID:   0x{0:02X}\nMagnetometer ID:    0x{0:02X}\nGyroscope ID:       0x{0:02X}\n".format(
+    revisionStr = "Software version:   {0}\nBootloader version: {0}\nAccelerometer ID:   0x{0:02X}\nMagnetometer ID:    0x{0:02X}\nGyroscope ID:       0x{0:02X}\n".format(
         sw, bl, accel, mag, gyro)
     print(revisionStr)
     logfile.write(revisionStr + '\n')
