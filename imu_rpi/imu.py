@@ -80,39 +80,47 @@ def run_imu():
 
     logfile = open(logfilename, "w")
     logfile.write(f"BNO055 Log File - {dt}\n")
-    logfile.close()
 
-    print_sys_info()
-    calibrate_imu()
+    # Use this try block to ensure the log file is closed
+    try:
+        print_sys_info()
+        calibrate_imu()
 
-    print('Reading BNO055 data, press Ctrl-C to quit...')
-    while True:
-        # Read the Euler angles for heading, roll, pitch (all in degrees).
-        heading, roll, pitch = bno.read_euler()
-        # Read the calibration status, 0=uncalibrated and 3=fully calibrated.
-        sys, gyro, accel, mag = bno.get_calibration_status()
-        # Print everything out.
-        print('Heading={0:0.2F} Roll={1:0.2F} Pitch={2:0.2F}\tSys_cal={3} Gyro_cal={4} Accel_cal={5} Mag_cal={6}'.format(
-            heading, roll, pitch, sys, gyro, accel, mag))
-        # Other values you can optionally read:
-        # Orientation as a quaternion:
-        # x,y,z,w = bno.read_quaterion()
-        # Sensor temperature in degrees Celsius:
-        # temp_c = bno.read_temp()
-        # Magnetometer data (in micro-Teslas):
-        # x,y,z = bno.read_magnetometer()
-        # Gyroscope data (in degrees per second):
-        # x,y,z = bno.read_gyroscope()
-        # Accelerometer data (in meters per second squared):
-        # x,y,z = bno.read_accelerometer()
-        # Linear acceleration data (i.e. acceleration from movement, not gravity--
-        # returned in meters per second squared):
-        # x,y,z = bno.read_linear_acceleration()
-        # Gravity acceleration data (i.e. acceleration just from gravity--returned
-        # in meters per second squared):
-        # x,y,z = bno.read_gravity()
-        # Sleep for a second until the next reading.
-        time.sleep(1)
+        print('Reading BNO055 data, press Ctrl-C to quit...')
+        while True:
+            # Read the Euler angles for heading, roll, pitch (all in degrees).
+            heading, roll, pitch = bno.read_euler()
+            # Read the calibration status, 0=uncalibrated and 3=fully calibrated.
+            sys, gyro, accel, mag = bno.get_calibration_status()
+            # Construct a string full of measured data
+            data = "Heading={0:0.2F} Roll={1:0.2F} Pitch={2:0.2F}\tSys_cal={3} Gyro_cal={4} Accel_cal={5} Mag_cal={6}".format(
+                heading, roll, pitch, sys, gyro, accel, mag)
+
+            # Print data to stdout and log file
+            print()
+            logfile.write(data + "\n")
+
+            # Other values you can optionally read:
+            # Orientation as a quaternion:
+            # x,y,z,w = bno.read_quaterion()
+            # Sensor temperature in degrees Celsius:
+            # temp_c = bno.read_temp()
+            # Magnetometer data (in micro-Teslas):
+            # x,y,z = bno.read_magnetometer()
+            # Gyroscope data (in degrees per second):
+            # x,y,z = bno.read_gyroscope()
+            # Accelerometer data (in meters per second squared):
+            # x,y,z = bno.read_accelerometer()
+            # Linear acceleration data (i.e. acceleration from movement, not gravity--
+            # returned in meters per second squared):
+            # x,y,z = bno.read_linear_acceleration()
+            # Gravity acceleration data (i.e. acceleration just from gravity--returned
+            # in meters per second squared):
+            # x,y,z = bno.read_gravity()
+            # Sleep for a second until the next reading.
+            time.sleep(1)
+    except KeyboardInterrupt:
+        logfile.close()
 
 def parse_args():
     if len(sys.argv) > 2:
@@ -121,7 +129,6 @@ def parse_args():
                 logging.basicConfig(level=logging.DEBUG)
             elif arg.lower() == '-h':
                 print("Usage: sudo python imu.py [-v -h]")
-
 
 if __name__ == '__main__':
     # Parse command line arguments
