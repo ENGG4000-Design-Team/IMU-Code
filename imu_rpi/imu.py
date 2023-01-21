@@ -77,8 +77,8 @@ def run_imu(logfile):
 
     now = datetime.now()
     dt = now.strftime("%d/%m/%Y %H:%M:%S")
-    log.write("BNO055 Log File - {dt}\n")
-    
+    log.write(f"BNO055 Log File - {dt}\n")
+
     log.close()
 
     print_sys_info()
