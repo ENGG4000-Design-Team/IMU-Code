@@ -9,8 +9,8 @@ import time
 
 from Adafruit_BNO055 import BNO055
 
-# Raspberry Pi configuration with serial UART and RST connected to GPIO 18:
-bno = BNO055.BNO055(serial_port='/dev/serial0', rst=18)
+# Raspberry Pi configuration with serial UART:
+bno = BNO055.BNO055(serial_port='/dev/serial0')
 
 # Enable verbose debug logging if -v is passed as a parameter.
 if len(sys.argv) == 2 and sys.argv[1].lower() == '-v':
