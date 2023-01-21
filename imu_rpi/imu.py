@@ -79,8 +79,8 @@ def run_imu():
     logfilename = f"BNO055_LOG_{dt}.txt"
 
     logfile = open(logfilename, "w")
-    log.write(f"BNO055 Log File - {dt}\n")
-    log.close()
+    logfile.write(f"BNO055 Log File - {dt}\n")
+    logfile.close()
 
     print_sys_info()
     calibrate_imu()
