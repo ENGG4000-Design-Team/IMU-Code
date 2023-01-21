@@ -11,24 +11,31 @@ from datetime import datetime
 # Raspberry Pi configuration with serial UART:
 bno = BNO055.BNO055(serial_port='/dev/serial0')
 
-def print_sys_info():
+def print_sys_info(logfile):
     """Print the BNO055 IMU system information"""
     # Print system status and self test result.
     status, self_test, error = bno.get_system_status()
-    print('System status: {0}'.format(status))
-    print('Self test result (0x0F is normal): 0x{0:02X}'.format(self_test))
+
+    statusStr = "System status: {0}".format(status)
+    print(statusStr)
+    logfile.write(statusStr + '\n')
+
+    selfTestStr = "Self test result (0x0F is normal): 0x{0:02X}".format(self_test)
+    print(selfTestStr)
+    logfile.write(selfTestStr)
+
     # Print out an error if system status is in error mode.
     if status == 0x01:
-        print('System error: {0}'.format(error))
-        print('See datasheet section 4.3.59 for the meaning.')
+        errorStr = "System error: {0}\nSee datasheet section 4.3.59 for the meaning.".format(error)
+        print(errorStr)
+        logfile.write(errorStr)
 
     # Print BNO055 software revision and other diagnostic data.
     sw, bl, accel, mag, gyro = bno.get_revision()
-    print('Software version:   {0}'.format(sw))
-    print('Bootloader version: {0}'.format(bl))
-    print('Accelerometer ID:   0x{0:02X}'.format(accel))
-    print('Magnetometer ID:    0x{0:02X}'.format(mag))
-    print('Gyroscope ID:       0x{0:02X}\n'.format(gyro))
+    revisionStr = "Software version:   {0}\nBootloader version: {0}\nccelerometer ID:   0x{0:02X}\nMagnetometer ID:    0x{0:02X}\nGyroscope ID:       0x{0:02X}\n".format(
+        sw, bl, accel, mag, gyro)
+    print(revisionStr)
+    logfile(revisionStr + '\n')
 
 def calibrate_imu():
     """Instruct the user on how to manually calibrate
@@ -81,7 +88,7 @@ def run_imu():
 
     # Use this try block to ensure the log file is closed
     try:
-        print_sys_info()
+        print_sys_info(logfile)
         calibrate_imu()
 
         print('Reading BNO055 data, press Ctrl-C to quit...')
@@ -96,7 +103,7 @@ def run_imu():
 
             # Print data to stdout and log file
             print(data)
-            logfile.write(data + "\n")
+            logfile.write(data + '\n')
 
             # Other values you can optionally read:
             # Orientation as a quaternion:
