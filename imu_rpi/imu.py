@@ -2,6 +2,7 @@
 # Author: Ethan Garnier
 # Last Modified: January 21, 2023
 import logging
+import json
 import sys
 import time
 
@@ -10,6 +11,8 @@ from datetime import datetime
 
 # Raspberry Pi configuration with serial UART:
 bno = BNO055.BNO055(serial_port='/dev/serial0')
+
+CALIBRATION_FILE = "calibration.json"
 
 def print_sys_info(logfile):
     """Print the BNO055 IMU system information"""
@@ -67,7 +70,10 @@ def calibrate_imu():
     print("Calibration complete!\n")
     print("-----------\n\n")
 
-    # TODO: Write calibration offsets to calibration.json
+    # Write calibration offsets to calibration.json
+    with open(CALIBRATION_FILE, "a") as calfile:
+        json.dump(bno.get_calibration(), calfile)
+
 
 def run_imu():
     """Execute the main imu subroutine that will log
@@ -83,11 +89,9 @@ def run_imu():
     dt = now.strftime("%d-%m-%Y_%H-%M-%S")
     logfilename = f"BNO055_LOG_{dt}.txt"
 
-    logfile = open(logfilename, "w")
-    logfile.write(f"BNO055 Log File - {dt}\n")
+    with open(logfilename, "w") as logfile:
+        logfile.write(f"BNO055 Log File - {dt}\n")
 
-    # Use this try block to ensure the log file is closed
-    try:
         print_sys_info(logfile)
         calibrate_imu()
 
@@ -124,8 +128,6 @@ def run_imu():
             # x,y,z = bno.read_gravity()
             # Sleep for a second until the next reading.
             time.sleep(1)
-    except KeyboardInterrupt:
-        logfile.close()
 
 def parse_args():
     if len(sys.argv) > 2:
