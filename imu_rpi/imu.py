@@ -119,14 +119,15 @@ def run_imu():
             # and fetch the data again.
             if sys < 3 or mag < 3 or accel < 3 or gyro < 3:
                 with open(CALIBRATION_FILE, "r") as calfile:
-                    prevcal = json.load(cal_file)
+                    prevcal = json.load(calfile)
                     bno.set_calibration(prevcal)
+                    print("CALIBRATION RESTORED\n")
 
                 heading, roll, pitch = bno.read_euler()
                 sys, gyro, accel, mag = bno.get_calibration_status()
                 data = "Heading={0:0.2F} Roll={1:0.2F} Pitch={2:0.2F}\tSys_cal={3} Gyro_cal={4} Accel_cal={5} Mag_cal={6}".format(
                     heading, roll, pitch, sys, gyro, accel, mag)
-                    
+
             # Print data to stdout and log file
             print(data)
             logfile.write(data + '\n')
