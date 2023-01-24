@@ -79,7 +79,7 @@ def calibrate_imu():
     print("-----------\n\n")
 
     # Write calibration offsets to calibration.json
-    with open(CALIBRATION_FILE, "a") as calfile:
+    with open(CALIBRATION_FILE, "w") as calfile:
         json.dump(bno.get_calibration(), calfile)
 
 
