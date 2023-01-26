@@ -122,7 +122,7 @@ def run_imu():
                     prevcal = json.load(calfile)
                     bno.set_calibration(prevcal)
                     print("CALIBRATION RESTORED\n")
-                    time.sleep(0.5)
+                    time.sleep(1)
 
                 heading, roll, pitch = bno.read_euler()
                 sys, gyro, accel, mag = bno.get_calibration_status()
