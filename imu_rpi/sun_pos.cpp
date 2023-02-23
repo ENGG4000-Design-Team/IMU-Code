@@ -1,9 +1,12 @@
 /*
  * sun_pos.cpp
  * Author: Ethan Garnier
- * Date Modified: December 30, 2022
+ * Date Modified: February 23, 2022
  */
+#include <iostream>
+
 #include <chrono>
+#include <ctime>
 
 #include "sun_pos.h"
 
@@ -42,9 +45,33 @@ long julianDate(int year, int month, int day)
  float references float &elevation and float &azimuth. The actual values returned is 1
  if all calculations were successful, and 0 if an error occured.
 */
-int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude, time_t currentTime)
+int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude)
 {
-    int cSecond = second(currentTime);
+    //auto wallTime = std::chrono::system_clock::now();
+    //time_t time = std::chrono::system_clock::to_time_t(wallTime);
+    //tm utc_time = *gmtime(&time);
+
+    auto tp = std::chrono::system_clock::now();
+    auto dp = floor<std::chrono::days>(tp);
+    std::chrono::year_month_day ymd{dp};
+    std::chrono::hh_mm_ss time{floor<std::chrono::milliseconds>(tp-dp)};
+    auto y = ymd.year();
+    auto m = ymd.month();
+    auto d = ymd.day();
+    auto h = time.hours();
+    auto M = time.minutes();
+    auto s = time.seconds();
+    auto ms = time.subseconds();
+
+    std::cout << "Year:" << static_cast<int>(y) << std::endl;
+    std::cout << "Month:" << static_cast<unsigned>(m) << std::endl;
+    std::cout << "Day:" << static_cast<unsigned>(d) << std::endl;
+    std::cout << "Hour:" << h.count() << std::endl;
+    std::cout << "Minute:" << M.count() << std::endl;
+    std::cout << "Second:" << s.count() << std::endl;
+    std::cout << "Millisecond:" << ms.count() << std::endl;
+
+    /*int cSecond = second(currentTime);
     int cMinute = minute(currentTime);
     int cHour = hour(currentTime);
     int cDay = day(currentTime);
@@ -110,6 +137,8 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     // Azimuth measured eastward from north.
     *azimuth = (PI + atan2(sin(HrAngle), cos(HrAngle) * sin(latitudeRad) - tan(Decl) * cos(latitudeRad))) / DEG_TO_RAD;
 
+    */
+
     /*Serial.print(cYear);
     Serial.print(",");
     Serial.print(cMonth);
@@ -134,7 +163,7 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
 
  This function will print the calculated azimuth and elevation angles for further processing.
 */
-int testSunPosCalc()
+/*int testSunPosCalc()
 {
     float azimuth = 0.000f;
     float elevation = 0.000f;
@@ -167,4 +196,4 @@ int testSunPosCalc()
         adjustTime((long)1800);
         t = now();
     }
-}
+}*/

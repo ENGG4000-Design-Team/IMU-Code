@@ -13,11 +13,16 @@
 #include <thread>
 #include <vector>
 
-#include "cmps14.hpp"
+#include "sun_pos.h"
+//#include "cmps14.hpp"
 
 int main()
 {
-    auto imu = new cmps14(false);
+    float x = 1.0f;
+    float y = 1.0f;
+    calcSunPos(&x, &y, 1.0f, 1.0f);
+
+    /*auto imu = new cmps14(false);
 
     if (imu->begin() == -1)
     {
@@ -47,7 +52,7 @@ int main()
         std::cout << "Pitch: " << pitch << std::endl;
         std::cout << "Roll: " << roll << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    }
+    }*/
 
     return 1;
 }
