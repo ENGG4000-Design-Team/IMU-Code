@@ -46,7 +46,7 @@ long getJulianDate(int year, int month, int day)
  float references float &elevation and float &azimuth. The actual values returned is 1
  if all calculations were successful, and 0 if an error occured.
 */
-int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude)
+int calcSunPos(float &elevation, float &azimuth, float longitude, float latitude)
 {
     auto tp = std::chrono::system_clock::now();
     time_t tt = std::chrono::system_clock::to_time_t(tp);
@@ -57,24 +57,6 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     auto hour = utc_tm.tm_hour;
     auto minute = utc_tm.tm_min;
     auto second = utc_tm.tm_sec;
-
-    std::cout << "Year: " << year << std::endl;
-    std::cout << "Month: " << month << std::endl;
-    std::cout << "Day: " << day << std::endl;
-    std::cout << "Hour: " << hour << std::endl;
-    std::cout << "Minute: " << minute << std::endl;
-    std::cout << "Second: " << second << std::endl;
-
-    /*auto dp = floor<std::chrono::days>(tp);
-    std::chrono::year_month_day ymd{dp};
-    std::chrono::hh_mm_ss time{floor<std::chrono::milliseconds>(tp-dp)};
-    auto year = ymd.year();
-    auto month = ymd.month();
-    auto day = ymd.day();
-    auto hour = time.hours();
-    auto minute = time.minutes();
-    auto second = time.seconds();
-    auto ms = time.subseconds();*/
 
     // Multiply by 4 since we are GMT-4:00
     /*float LSTM = 15 * 4;
@@ -126,7 +108,7 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
 
     std::cout << "Equation of time: " << E << std::endl;*/
 
-    /*float longitudeRad = longitude * DEG_TO_RAD;
+    float longitudeRad = longitude * DEG_TO_RAD;
     float latitudeRad = latitude * DEG_TO_RAD;
 
     // From Arduino Uno and Solar Position Calculations:
@@ -134,8 +116,8 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     // since 12h:00m:00s Universal Time, Jan 1, 2000"
     float T;
 
-    long JD_whole = getJulianDate(static_cast<int>(year), static_cast<unsigned>(month), static_cast<unsigned>(day));
-    float JD_frac = (hour.count() + minute.count() / 60. + second.count() / 3600.) / 24. - .5;
+    long JD_whole = getJulianDate(year, month, day);
+    float JD_frac = (hour + minute / 60. + second / 3600.) / 24. - .5;
 
     // Calculate T
     T = JD_whole - 2451545;
@@ -183,7 +165,7 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     // Values returned:
     *elevation = (asin(sin(latitudeRad) * sin(Decl) + cos(latitudeRad) * (cos(Decl) * cos(HrAngle)))) / DEG_TO_RAD;
     // Azimuth measured eastward from north.
-    *azimuth = (PI + atan2(sin(HrAngle), cos(HrAngle) * sin(latitudeRad) - tan(Decl) * cos(latitudeRad))) / DEG_TO_RAD;*/
+    *azimuth = (PI + atan2(sin(HrAngle), cos(HrAngle) * sin(latitudeRad) - tan(Decl) * cos(latitudeRad))) / DEG_TO_RAD;
 
     /*Serial.print(cYear);
     Serial.print(",");

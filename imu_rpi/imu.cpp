@@ -47,7 +47,7 @@ int main()
         heading = imu->getHeading();
         pitch = imu->getPitch();
 
-        calcSunPos(&elevation, &azimuth, longitude, latitude);
+        calcSunPos(elevation, azimuth, longitude, latitude);
 
         headingCorrection = azimuth - heading;
         pitchCorrection = elevation - pitch;

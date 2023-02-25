@@ -9,5 +9,4 @@
 #define PI 3.141592654
 #define TWOPI 6.28318531
 
-int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude);
-//int testSunPosCalc();
+int calcSunPos(float &elevation, float &azimuth, float longitude, float latitude);

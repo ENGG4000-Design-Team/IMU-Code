@@ -1,6 +1,6 @@
 CC = g++
 
-BASEFLAGS = -Wall -std=c++20
+BASEFLAGS = -Wall
 DEBUG_FLAGS = -DDEBUG -g
 LIBS = -lcmps14 -lwiringPi
 
