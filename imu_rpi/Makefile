@@ -15,7 +15,7 @@ debug: CFLAGS = $(BASEFLAGS) $(DEBUG_FLAGS)
 debug: $(EXE)
 
 $(EXE): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(EXE)
+	$(CC) $(CFLAGS) $(OBJS) -o $(EXE) $(LIBS)
 
 imu.o: imu.cpp sun_pos.h
 	$(CC) $(CFLAGS) -c imu.cpp

@@ -14,7 +14,7 @@
 #include <vector>
 
 #include "sun_pos.h"
-//#include "cmps14.hpp"
+#include "cmps14.hpp"
 
 int main()
 {
