@@ -3,11 +3,6 @@
  * Author: Ethan Garnier
  * Date Modified: February 23, 2022
  */
-#include <iostream>
-
-#include <chrono>
-#include <cmath>
-
 #include "sun_pos.h"
 
 /*
