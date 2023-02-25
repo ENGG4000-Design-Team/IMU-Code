@@ -36,7 +36,7 @@ int main()
     // TODO: Do we want to enable automatic calibration
     // or just use the factory calibration?
 
-    float heading = 0.0f, pitch = 0.0f, roll = 0.0f;
+    float heading = 0.0f, pitch = 0.0f;
     float azimuth = 0.0f, elevation = 0.0f;
     float latitude = 45.945045;
     float longitude = -66.648227;
@@ -46,7 +46,6 @@ int main()
     {
         heading = imu->getHeading();
         pitch = imu->getPitch();
-        roll = imu->getRoll();
 
         calcSunPos(&elevation, &azimuth, longitude, latitude);
 
@@ -60,8 +59,6 @@ int main()
         //std::cout << "Pitch: " << pitch << std::endl;
         //std::cout << "Roll: " << roll << std::endl;
 
-        
-        
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 

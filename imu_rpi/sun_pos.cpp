@@ -42,11 +42,24 @@ long getJulianDate(int year, int month, int day)
 */
 int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude)
 {
-    //float longitudeRad = longitude * DEG_TO_RAD;
-    //float latitudeRad = latitude * DEG_TO_RAD;
-
     auto tp = std::chrono::system_clock::now();
-    auto dp = floor<std::chrono::days>(tp);
+    time_t tt = std::chrono::system_clock::to_time_t(tp);
+    tm utc_tm = *gmtime(&tt);
+    auto year = utc_tm.tm_year + 1900;
+    auto month = utc_tm.tm_mon + 1;
+    auto day = utc_tm.tm_mday;
+    auto hour = utc_tm.tm_hour;
+    auto minute = utc_tm.tm_min;
+    auto second = utc_tm.tm_sec;
+
+    std::cout << "Year: " << year << std::endl;
+    std::cout << "Month: " << month << std::endl;
+    std::cout << "Day: " << day << std::endl;
+    std::cout << "Hour: " << hour << std::endl;
+    std::cout << "Minute: " << minute << std::endl;
+    std::cout << "Second: " << second << std::endl;
+
+    /*auto dp = floor<std::chrono::days>(tp);
     std::chrono::year_month_day ymd{dp};
     std::chrono::hh_mm_ss time{floor<std::chrono::milliseconds>(tp-dp)};
     auto year = ymd.year();
@@ -55,8 +68,7 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     auto hour = time.hours();
     auto minute = time.minutes();
     auto second = time.seconds();
-    auto ms = time.subseconds();
-
+    auto ms = time.subseconds();*/
 
     // Multiply by 4 since we are GMT-4:00
     /*float LSTM = 15 * 4;
@@ -101,14 +113,14 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     float y = tan(epsilon / 2) * tan(epsilon / 2);
     float f = 180 / PI;
     float alpha = L0 - y * f * sin(2 * L0) + 0.2 * y * y * f * sin(4 * L0);
-    
+
     // Equation of time
     float E = (ST - alpha) - (15 * hour.count() - 180);
     E = (E > 10) ? E - 360 : E;
 
     std::cout << "Equation of time: " << E << std::endl;*/
 
-    float longitudeRad = longitude * DEG_TO_RAD;
+    /*float longitudeRad = longitude * DEG_TO_RAD;
     float latitudeRad = latitude * DEG_TO_RAD;
 
     // From Arduino Uno and Solar Position Calculations:
@@ -165,7 +177,7 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     // Values returned:
     *elevation = (asin(sin(latitudeRad) * sin(Decl) + cos(latitudeRad) * (cos(Decl) * cos(HrAngle)))) / DEG_TO_RAD;
     // Azimuth measured eastward from north.
-    *azimuth = (PI + atan2(sin(HrAngle), cos(HrAngle) * sin(latitudeRad) - tan(Decl) * cos(latitudeRad))) / DEG_TO_RAD;
+    *azimuth = (PI + atan2(sin(HrAngle), cos(HrAngle) * sin(latitudeRad) - tan(Decl) * cos(latitudeRad))) / DEG_TO_RAD;*/
 
     /*Serial.print(cYear);
     Serial.print(",");
