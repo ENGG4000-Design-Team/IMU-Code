@@ -163,9 +163,9 @@ int calcSunPos(float &elevation, float &azimuth, float longitude, float latitude
     float HrAngle = DEG_TO_RAD * GrHrAngle + longitudeRad - RA;
 
     // Values returned:
-    *elevation = (asin(sin(latitudeRad) * sin(Decl) + cos(latitudeRad) * (cos(Decl) * cos(HrAngle)))) / DEG_TO_RAD;
+    elevation = (asin(sin(latitudeRad) * sin(Decl) + cos(latitudeRad) * (cos(Decl) * cos(HrAngle)))) / DEG_TO_RAD;
     // Azimuth measured eastward from north.
-    *azimuth = (PI + atan2(sin(HrAngle), cos(HrAngle) * sin(latitudeRad) - tan(Decl) * cos(latitudeRad))) / DEG_TO_RAD;
+    azimuth = (PI + atan2(sin(HrAngle), cos(HrAngle) * sin(latitudeRad) - tan(Decl) * cos(latitudeRad))) / DEG_TO_RAD;
 
     /*Serial.print(cYear);
     Serial.print(",");
