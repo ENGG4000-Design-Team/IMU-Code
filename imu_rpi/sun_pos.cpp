@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include <chrono>
-#include <ctime>
+#include <cmath>
 
 #include "sun_pos.h"
 
@@ -16,9 +16,9 @@
  This code is modified from "Arduino Uno and Solar Position Calculations"
  authored by David Brooks.
 */
-long julianDate(int year, int month, int day)
+long getJulianDate(int year, int month, int day)
 {
-    long JD_whole;
+    long jd;
     int A, B;
     if (month <= 2)
     {
@@ -27,8 +27,8 @@ long julianDate(int year, int month, int day)
     }
     A = year / 100;
     B = 2 - A + A / 4;
-    JD_whole = (long)(365.25 * (year + 4716)) + (int)(30.6001 * (month + 1)) + day + B - 1524;
-    return JD_whole;
+    jd = (long)(365.25 * (year + 4716)) + (int)(30.6001 * (month + 1)) + day + B - 1524;
+    return jd;
 }
 
 /*
@@ -47,36 +47,71 @@ long julianDate(int year, int month, int day)
 */
 int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude)
 {
-    //auto wallTime = std::chrono::system_clock::now();
-    //time_t time = std::chrono::system_clock::to_time_t(wallTime);
-    //tm utc_time = *gmtime(&time);
+    //float longitudeRad = longitude * DEG_TO_RAD;
+    //float latitudeRad = latitude * DEG_TO_RAD;
 
     auto tp = std::chrono::system_clock::now();
     auto dp = floor<std::chrono::days>(tp);
     std::chrono::year_month_day ymd{dp};
     std::chrono::hh_mm_ss time{floor<std::chrono::milliseconds>(tp-dp)};
-    auto y = ymd.year();
-    auto m = ymd.month();
-    auto d = ymd.day();
-    auto h = time.hours();
-    auto M = time.minutes();
-    auto s = time.seconds();
+    auto year = ymd.year();
+    auto month = ymd.month();
+    auto day = ymd.day();
+    auto hour = time.hours();
+    auto minute = time.minutes();
+    auto second = time.seconds();
     auto ms = time.subseconds();
 
-    std::cout << "Year:" << static_cast<int>(y) << std::endl;
-    std::cout << "Month:" << static_cast<unsigned>(m) << std::endl;
-    std::cout << "Day:" << static_cast<unsigned>(d) << std::endl;
-    std::cout << "Hour:" << h.count() << std::endl;
-    std::cout << "Minute:" << M.count() << std::endl;
-    std::cout << "Second:" << s.count() << std::endl;
-    std::cout << "Millisecond:" << ms.count() << std::endl;
 
-    /*int cSecond = second(currentTime);
-    int cMinute = minute(currentTime);
-    int cHour = hour(currentTime);
-    int cDay = day(currentTime);
-    int cMonth = month(currentTime);
-    int cYear = year(currentTime); // todo: we can hardcode this yes?
+    // Multiply by 4 since we are GMT-4:00
+    /*float LSTM = 15 * 4;
+
+    // Determine number of days since start of year
+    const auto day0 = std::chrono::sys_days{std::chrono::January/0/year};
+    const auto delta = (dp - day0).count();
+
+    // Calculate equation of time
+    float B = (360 / 365) * (delta - 81);
+    float EoT = 9.87 * sin(2 * B) - 7.53 * cos(B) - 1.5 * sin(B);
+
+    // Time Correction Factor
+    float TC = 4 * (longitude - LSTM) + EoT;*/
+
+    /*long jd_whole = getJulianDate(static_cast<int>(year), static_cast<unsigned>(month), static_cast<unsigned>(day));
+    //float jd_frac = (hour.count() + minute.count() / 60.0 + second.count() / 3600.0) / 24.0 - 0.5;
+
+    float t = (jd_whole + hour.count() / 24 - 2451545.0) / 36525;
+
+    float T = t + floor(-3.36 + 1.35 * pow(t + 2.33, 2)) * pow(10, -8);
+
+    // The Greensich mean sidereal time
+    float ST = 100.4606 - 36000.77005 * t + 0.000388 * t * t - 3 * pow(10, -8) * t * t * t;
+
+    // The geometric mean ecliptic longitude of date
+    float L = 280.46607 + 36000.76980 * T + 0.0003025 * T * T;
+
+    // The mean anomaly
+    float G = 357.528 + 35999.0503 * T;
+
+    // The mean obliquity of the ecliptic
+    float epsilon = 23.4393 - 0.01300 * T - 0.0000002 * T * T + 0.0000005 * T * T * T;
+
+    // The equation of the centre
+    float C = (1.9146 - 0.00484 * T - 0.000014 * T * T) * sin(G) + (0.01999 - 0.00008 * T) * sin(2 * G);
+
+    // The ecliptic longitude of date
+    float L0 = L + C - 0.0057;
+
+    // Right ascension
+    float y = tan(epsilon / 2) * tan(epsilon / 2);
+    float f = 180 / PI;
+    float alpha = L0 - y * f * sin(2 * L0) + 0.2 * y * y * f * sin(4 * L0);
+    
+    // Equation of time
+    float E = (ST - alpha) - (15 * hour.count() - 180);
+    E = (E > 10) ? E - 360 : E;
+
+    std::cout << "Equation of time: " << E << std::endl;*/
 
     float longitudeRad = longitude * DEG_TO_RAD;
     float latitudeRad = latitude * DEG_TO_RAD;
@@ -86,8 +121,8 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     // since 12h:00m:00s Universal Time, Jan 1, 2000"
     float T;
 
-    long JD_whole = julianDate(cYear, cMonth, cDay);
-    float JD_frac = (cHour + cMinute / 60. + cSecond / 3600.) / 24. - .5;
+    long JD_whole = getJulianDate(static_cast<int>(year), static_cast<unsigned>(month), static_cast<unsigned>(day));
+    float JD_frac = (hour.count() + minute.count() / 60. + second.count() / 3600.) / 24. - .5;
 
     // Calculate T
     T = JD_whole - 2451545;
@@ -98,7 +133,7 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     float L0 = DEG_TO_RAD * fmod(280.46645 + 36000.76983 * T, 360);
     float M = DEG_TO_RAD * fmod(357.5291 + 35999.0503 * T, 360);
 
-    // Eccentricity of Earth’s orbit e
+    // Eccentricity of Earth’s orbit e`
     float e = 0.016708617 - 0.000042037 * T;
 
     // Sun’s equation of center C in radians
@@ -136,8 +171,6 @@ int calcSunPos(float *elevation, float *azimuth, float longitude, float latitude
     *elevation = (asin(sin(latitudeRad) * sin(Decl) + cos(latitudeRad) * (cos(Decl) * cos(HrAngle)))) / DEG_TO_RAD;
     // Azimuth measured eastward from north.
     *azimuth = (PI + atan2(sin(HrAngle), cos(HrAngle) * sin(latitudeRad) - tan(Decl) * cos(latitudeRad))) / DEG_TO_RAD;
-
-    */
 
     /*Serial.print(cYear);
     Serial.print(",");

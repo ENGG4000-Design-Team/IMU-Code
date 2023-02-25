@@ -18,11 +18,7 @@
 
 int main()
 {
-    float x = 1.0f;
-    float y = 1.0f;
-    calcSunPos(&x, &y, 1.0f, 1.0f);
-
-    /*auto imu = new cmps14(false);
+    auto imu = new cmps14(false);
 
     if (imu->begin() == -1)
     {
@@ -41,6 +37,10 @@ int main()
     // or just use the factory calibration?
 
     float heading = 0.0f, pitch = 0.0f, roll = 0.0f;
+    float azimuth = 0.0f, elevation = 0.0f;
+    float latitude = 45.945045;
+    float longitude = -66.648227;
+    float headingCorrection = 0.0f, pitchCorrection = 0.0f;
 
     while (1)
     {
@@ -48,11 +48,22 @@ int main()
         pitch = imu->getPitch();
         roll = imu->getRoll();
 
-        std::cout << "\nHeading: " << heading << std::endl;
-        std::cout << "Pitch: " << pitch << std::endl;
-        std::cout << "Roll: " << roll << std::endl;
+        calcSunPos(&elevation, &azimuth, longitude, latitude);
+
+        headingCorrection = azimuth - heading;
+        pitchCorrection = elevation - pitch;
+
+        std::cout << "\nHeading correction: " << headingCorrection << " degrees" << std::endl;
+        std::cout << "\nPitch correction: " << pitchCorrection << " degrees" << std::endl;
+
+        //std::cout << "\nHeading: " << heading << std::endl;
+        //std::cout << "Pitch: " << pitch << std::endl;
+        //std::cout << "Roll: " << roll << std::endl;
+
+        
+        
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    }*/
+    }
 
     return 1;
 }
