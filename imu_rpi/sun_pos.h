@@ -5,12 +5,6 @@
  */
 #pragma once
 
-#include <iostream>
-
-#include <chrono>
-#include <cmath>
-#include <time.h>
-
 #define DEG_TO_RAD 0.01745329
 #define PI 3.141592654
 #define TWOPI 6.28318531

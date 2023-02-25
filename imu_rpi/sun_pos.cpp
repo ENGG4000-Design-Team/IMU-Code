@@ -5,6 +5,12 @@
  */
 #include "sun_pos.h"
 
+#include <iostream>
+
+#include <chrono>
+#include <cmath>
+#include <time.h>
+
 /*
  julianDate calculates the integer portion of the current Julia Date.
  This is the number of days ellapsed since noon on January 1, 4713 B. C.
